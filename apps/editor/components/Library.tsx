@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import * as V from "../lib/dx7/codec";
 import { fromSyx, toBankSysex, toSysex, type SyxItem } from "../lib/dx7/sysex";
 import { download, fileName } from "../lib/files";
@@ -16,10 +17,13 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTi
 
 // The LIBRARY sheet, from vz10m's. LOCAL: voices kept in this browser; IMPORT .SYX reads single voices and 32-voice
 // banks and hands them to the import dialog (components/ImportDialog.tsx, owned by the editor so a bank from MIDI
-// uses it too); checked voices (up to 32) make a bank to export or send. RESOURCES: outside links
-// (lib/resources.ts). SHARED and BANKS come with sharing. Loaded with next/dynamic the first time LIBRARY is pressed.
+// uses it too); checked voices (up to 32) make a bank to export or send. SHARED: the public list
+// (components/Shared.tsx, its own chunk with Relay). RESOURCES: outside links (lib/resources.ts). Loaded with
+// next/dynamic the first time LIBRARY is pressed.
 
-const TABS = [{ value: "local", label: "LOCAL" }, { value: "resources", label: "RESOURCES" }] as const;
+const Shared = dynamic(() => import("./Shared"), { ssr: false, loading: () => <p className={NOTE}>LOADING…</p> });
+
+const TABS = [{ value: "local", label: "LOCAL" }, { value: "shared", label: "SHARED" }, { value: "resources", label: "RESOURCES" }] as const;
 type Tab = (typeof TABS)[number]["value"];
 const BANK = 32;
 
@@ -101,6 +105,7 @@ export default function Library({ open, onOpenChange, library, updateLibrary, vo
         </div>
         <SheetDescription id="lib-desc" className={NOTE}>
           {tab === "local" ? "Kept in this browser. Import and export .syx files to move voices and banks between machines."
+            : tab === "shared" ? "DX7 voices anyone can open. What you share here is public, and names are checked before they're listed."
             : "Manuals, the SysEx format, articles and tools elsewhere on the web. They open in a new tab."}
         </SheetDescription>
         {tab === "resources" && (
@@ -115,6 +120,16 @@ export default function Library({ open, onOpenChange, library, updateLibrary, vo
               </li>
             ))}
           </ul>
+        )}
+        {tab === "shared" && (
+          <div role="tabpanel" id="lib-panel-shared" aria-labelledby="lib-tab-shared" className="grid gap-3">
+            <Shared voice={voice} onOpen={onOpen} onSaveLocal={bytes => {
+              const name = V.getName(bytes) || "UNTITLED";
+              updateLibrary(list => [entry(name, bytes), ...list]);
+              setMsg(`SAVED ${name} TO LOCAL.`);
+            }} />
+            {msg && <p role="status" className={NOTE}>{msg}</p>}
+          </div>
         )}
         {tab === "local" && (
           <div role="tabpanel" id="lib-panel-local" aria-labelledby="lib-tab-local" className="grid gap-3.5">
