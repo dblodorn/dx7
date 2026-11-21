@@ -1,0 +1,19 @@
+{
+  "name": "dx7",
+  "private": true,
+  "type": "module",
+  "description": "A browser editor and librarian for the Yamaha DX7, and its emulator engine as a package.",
+  "scripts": {
+    "dev": "pnpm -F dx7-editor dev",
+    "build": "pnpm -F dx7-editor build",
+    "start": "pnpm -F dx7-editor start",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "relay": "pnpm -F dx7-editor relay",
+    "schema:pull": "pnpm -F dx7-editor schema:pull"
+  },
+  "engines": {
+    "node": ">=22.18"
+  },
+  "packageManager": "pnpm@12.16.1"
+}

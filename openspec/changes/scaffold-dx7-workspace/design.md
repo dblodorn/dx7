@@ -31,4 +31,4 @@ Vercel builds from `apps/editor` with pnpm. The editor depends on the workspace 
 
 ## Risks
 
-- **Drift from vz10m:** fixes to the shared shell now have to be made twice. Accepted until a shared base exists; each copied file keeps a first-line comment naming its vz10m origin, so a later diff finds them.
+- **Drift from vz10m:** fixes to the shared shell now have to be made twice. Accepted until a shared base exists. The copy is of vz10m at `24df23e`, and copied files keep vz10m's paths (with `casio-vz-engine` → `yamaha-dx7-engine`), so `diff -r` between the two repos finds them; the files that were rewritten rather than trimmed (`Editor.tsx`, `Library.tsx`, `lib/midi.ts`) say so in their header comment.
