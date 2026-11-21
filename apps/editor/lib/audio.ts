@@ -10,6 +10,7 @@ let ctx: AudioContext | null = null;
 let synth: Synth | null = null;
 let starting: Promise<void> | null = null;
 let voice: Uint8Array | null = null; // latest voice, sent again when the worklet comes up
+let operators = 0b111111; // operator on/off (parameter 155), sent again too
 let sinkId = ""; // chosen output device; "" is the system default
 let unlockEl: HTMLAudioElement | null = null; // the looping silent element (see unlock)
 
@@ -61,6 +62,7 @@ export function start(): Promise<void> {
     const s = await createSynth(c);
     s.output.connect(c.destination);
     if (voice) s.loadVoice(voice);
+    s.setOperators(operators);
     synth = s;
     if (sinkId && deviceChoiceSupported()) await c.setSinkId(sinkId).catch(() => { /* unplugged: stay on the default */ });
     await resumed;
@@ -80,6 +82,12 @@ export const running = (): boolean => !!ctx && !!synth && ctx.state === "running
 export function setVoice(data: Uint8Array): void {
   voice = data;
   synth?.loadVoice(data); // the synth copies it, so later edits can't race the audio thread
+}
+
+// Operator ON/OFF (parameter 155's value: bit 5 OP1 … bit 0 OP6), the DX7-only extra on the synth.
+export function setOperators(mask: number): void {
+  operators = mask;
+  synth?.setOperators(mask);
 }
 
 export const noteOn = (note: number, velocity = 100): void => synth?.noteOn(note, velocity);

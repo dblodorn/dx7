@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "The Yamaha DX7 emulator as a sound source: load voices, play notes, in an AudioWorklet or offline.",
   "type": "module",
-  "license": "MIT",
+  "license": "MIT AND Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dblodorn/dx7.git",
@@ -27,7 +27,8 @@
     "dist",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "NOTICE"
   ],
   "sideEffects": false,
   "engines": {
@@ -35,7 +36,7 @@
   },
   "scripts": {
     "build:worklet": "node scripts/build-worklet.ts",
-    "test": "pnpm build:worklet && node --test 'test/**/*.test.ts'",
+    "test": "pnpm build:worklet && node --expose-gc --test 'test/**/*.test.ts'",
     "typecheck": "pnpm build:worklet && tsc --noEmit",
     "build": "rm -rf dist && pnpm build:worklet && tsc -p tsconfig.build.json && node scripts/rewrite-dts.ts",
     "smoke": "node scripts/smoke-pack.ts"

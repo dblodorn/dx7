@@ -3,7 +3,7 @@
 // the worklet module once per context and makes nodes. Nothing here runs at import time, so it is safe to
 // import during server rendering.
 
-import { checkNote, noteOnEvent } from "./notes.ts";
+import { checkNote, checkOperatorMask, noteOnEvent } from "./notes.ts";
 import { readVoice } from "./codec.ts";
 import code from "./worklet/code.generated.ts";
 import { PROCESSOR, type ToWorklet } from "./worklet/messages.ts";
@@ -25,6 +25,9 @@ export interface Synth {
   noteOn(note: number, velocity?: number): void;
   noteOff(note: number): void;
   allNotesOff(): void;
+  // DX7 only, outside the engine-packages common surface: which operators sound (parameter 155's value, bit 5 OP1 …
+  // bit 0 OP6, 1 = on), for every voice at once. Throws outside 0–63.
+  setOperators(mask: number): void;
   // All notes off, disconnect, close the port. The synth can't be used afterwards.
   dispose(): void;
 }
@@ -59,6 +62,7 @@ export async function createSynth(ctx: BaseAudioContext, opts: SynthOptions = {}
     },
     noteOff(note) { post({ type: "noteOff", note: checkNote(note) }); },
     allNotesOff() { post({ type: "allOff" }); },
+    setOperators(mask) { post({ type: "operators", mask: checkOperatorMask(mask) }); },
     dispose() {
       if (disposed) return;
       post({ type: "allOff" });

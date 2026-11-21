@@ -14,6 +14,7 @@ class Dx7Processor extends AudioWorkletProcessor {
       if (m.type === "patch") this.engine.setPatch(m.data);
       else if (m.type === "noteOn") this.engine.noteOn(m.note, m.velocity);
       else if (m.type === "noteOff") this.engine.noteOff(m.note);
+      else if (m.type === "operators") this.engine.setOperators(m.mask);
       else this.engine.allOff();
     };
   }

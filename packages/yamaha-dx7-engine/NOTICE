@@ -1,0 +1,30 @@
+@dblodorn/yamaha-dx7-engine
+Copyright (c) 2026 Dain Blodorn Kim. Licensed under the MIT License (see LICENSE).
+
+This package contains code ported from music-synthesizer-for-android ("msfa"):
+https://github.com/google/music-synthesizer-for-android
+
+    Copyright 2012 Google Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+Ported files (TypeScript translations of msfa's C++, modified as noted in each file's header):
+    src/engine/tables.ts       from sin.cc, exp2.cc, freqlut.cc
+    src/engine/env.ts          from env.cc (sample-rate scaling added)
+    src/engine/pitchenv.ts     from pitchenv.cc
+    src/engine/lfo.ts          from lfo.cc
+    src/engine/note.ts         from dx7note.cc, fm_core.cc, fm_op_kernel.cc (routing, chained feedback,
+                               amplitude modulation, transpose, OSC KEY SYNC and operator on/off are new)
+    src/engine/calibration.ts  tables from env.cc, dx7note.cc, pitchenv.cc, lfo.cc, synth_unit.cc (marked PORTED)
+
+test/algorithms.test.ts includes msfa's algorithm routing table (fm_core.cc) as test data.

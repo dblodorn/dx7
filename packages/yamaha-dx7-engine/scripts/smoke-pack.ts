@@ -9,6 +9,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { initLike } from "../test/voices.ts";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const name = (JSON.parse(readFileSync(path.join(root, "package.json"), "utf8")) as { name: string }).name;
@@ -17,7 +18,7 @@ const run = (cmd: string, args: string[], cwd = dir) => execFileSync(cmd, args, 
 
 try {
   const tgz = run("pnpm", ["pack", "--pack-destination", dir], root).trim().split("\n").pop()!;
-  writeFileSync(path.join(dir, "voice.bin"), new Uint8Array(155));
+  writeFileSync(path.join(dir, "voice.bin"), initLike());
   writeFileSync(path.join(dir, "package.json"), JSON.stringify({ name: "smoke", private: true, type: "module", dependencies: { [name]: `file:${tgz}` } }));
   run("npm", ["install", "--no-audit", "--no-fund", "--ignore-scripts", "--loglevel=error"]);
 
@@ -49,11 +50,11 @@ s.loadVoice(voice);
 s.noteOn(60, 100);
 const out = new Float32Array(24000);
 s.render(out);
-// the skeleton engine is silent: the render must run and write zeros (the emulator change makes this a peak check)
-if (out.some(v => v !== 0)) throw new Error("the skeleton engine should render silence");
+const peak = out.reduce((m, v) => Math.max(m, Math.abs(v)), 0);
+if (!(peak > 0.05)) throw new Error("silent render, peak " + peak);
 const worklet = import.meta.resolve("${name}/worklet.js");
 if (!readFileSync(new URL(worklet), "utf8").includes("registerProcessor")) throw new Error("worklet.js is not the worklet");
-console.log("rendered " + out.length + " frames, worklet.js ok");
+console.log("INIT VOICE: peak " + peak.toFixed(3) + ", worklet.js ok");
 `);
   process.stdout.write(`smoke (${path.basename(tgz)}): ${run("node", ["play.mjs"])}`);
 } finally {

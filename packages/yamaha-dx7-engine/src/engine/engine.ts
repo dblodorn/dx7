@@ -1,52 +1,97 @@
-// The emulator, shared by the AudioWorklet and the offline synth. This is the skeleton: it keeps the voice and
-// assigns notes to 16 voices exactly as the real engine will, and renders silence. The emulator change replaces
-// what a voice plays; the note bookkeeping stays. render() adds into its buffer and must never allocate.
+// The DX7 emulator, shared by the AudioWorklet and the offline synth: 16 preallocated voices, one LFO, rendered in
+// 64-sample blocks. render() adds into its output and never allocates.
+
+import { ENV_RATE_REFERENCE, N, OUTPUT_SCALE } from "./calibration.ts";
+import { Lfo } from "./lfo.ts";
+import { Note } from "./note.ts";
+import { freqTable } from "./tables.ts";
 
 export const POLYPHONY = 16;
+const ALL_OPERATORS = 0b111111;
 
 export class Engine {
   readonly sampleRate: number;
   private patch: Uint8Array | null = null;
-  // per voice: the note it plays (-1 when free), and when it started, for stealing the oldest
-  private readonly notes = new Int16Array(POLYPHONY).fill(-1);
-  private readonly started = new Float64Array(POLYPHONY);
+  private readonly notes: Note[] = [];
+  private readonly lfo: Lfo;
+  private readonly lut: Int32Array;
+  private readonly mix = new Float64Array(N);
+  private readonly block = new Float32Array(N); // the current block, scaled
+  private blockPos = N; // samples of `block` already handed out
   private clock = 0;
+  private mask = ALL_OPERATORS;
 
   constructor(sampleRate: number) {
     this.sampleRate = sampleRate;
+    this.lfo = new Lfo(sampleRate);
+    this.lut = freqTable(sampleRate);
+    for (let i = 0; i < POLYPHONY; i++) this.notes.push(new Note(sampleRate, ENV_RATE_REFERENCE / sampleRate));
   }
 
-  setPatch(voice: Uint8Array): void { this.patch = voice; }
+  // Notes already sounding keep the voice they started with.
+  setPatch(voice: Uint8Array): void {
+    this.patch = voice;
+    this.lfo.reset(voice);
+  }
   get hasPatch(): boolean { return this.patch !== null; }
 
-  // A note already sounding is restarted on its own voice; otherwise a free voice, else the oldest is taken.
-  noteOn(note: number, _velocity: number): void {
-    let v = this.notes.indexOf(note);
-    if (v < 0) v = this.notes.indexOf(-1);
-    if (v < 0) {
-      v = 0;
-      for (let i = 1; i < POLYPHONY; i++) if (this.started[i]! < this.started[v]!) v = i;
-    }
-    this.notes[v] = note;
-    this.started[v] = ++this.clock;
+  // Parameter 155: bit 5 OP1 … bit 0 OP6. Applies to every voice at once, as on the DX7.
+  setOperators(mask: number): void { this.mask = mask & ALL_OPERATORS; }
+
+  // A key already sounding restarts on its own voice; otherwise a free voice, else the oldest released one, else the
+  // oldest.
+  noteOn(note: number, velocity: number): void {
+    if (!this.patch) return;
+    let v = this.notes.find(n => n.key === note && !n.released);
+    v ??= this.notes.find(n => n.key < 0);
+    v ??= this.oldest(true) ?? this.oldest(false);
+    this.lfo.keyDown();
+    v!.start(this.patch, note, velocity, ++this.clock);
   }
 
-  // Without envelopes yet, a released voice is free at once.
   noteOff(note: number): void {
-    const v = this.notes.indexOf(note);
-    if (v >= 0) this.notes[v] = -1;
+    for (const n of this.notes) if (n.key === note && !n.released) n.release();
   }
 
-  allOff(): void { this.notes.fill(-1); }
+  allOff(): void {
+    for (const n of this.notes) n.key = -1;
+  }
 
-  // How many voices are sounding (for tests and meters).
+  // Voices sounding, released ones included until they fall silent.
   sounding(): number {
-    let n = 0;
-    for (let i = 0; i < POLYPHONY; i++) if (this.notes[i]! >= 0) n++;
-    return n;
+    let k = 0;
+    for (const n of this.notes) if (n.key >= 0) k++;
+    return k;
   }
 
-  render(_out: Float32Array, _frames: number, _offset = 0): void {
-    // silent until the emulator lands
+  // Adds `frames` mono samples into out[offset…].
+  render(out: Float32Array, frames: number, offset = 0): void {
+    let i = 0;
+    while (i < frames) {
+      if (this.blockPos === N) this.renderBlock();
+      const n = Math.min(N - this.blockPos, frames - i);
+      for (let k = 0; k < n; k++) out[offset + i + k] = out[offset + i + k]! + this.block[this.blockPos + k]!;
+      this.blockPos += n;
+      i += n;
+    }
+  }
+
+  private renderBlock(): void {
+    this.mix.fill(0);
+    const lfo = this.lfo.sample(), delay = this.lfo.delay();
+    for (let v = 0; v < POLYPHONY; v++) {
+      const n = this.notes[v]!;
+      if (n.key < 0) continue;
+      n.render(this.mix, this.lut, lfo, delay, this.mask);
+      if (n.finished) n.key = -1;
+    }
+    for (let k = 0; k < N; k++) this.block[k] = this.mix[k]! * OUTPUT_SCALE;
+    this.blockPos = 0;
+  }
+
+  private oldest(releasedOnly: boolean): Note | undefined {
+    let best: Note | undefined;
+    for (const n of this.notes) if ((!releasedOnly || n.released) && (!best || n.started < best.started)) best = n;
+    return best;
   }
 }
