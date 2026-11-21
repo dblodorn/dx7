@@ -35,7 +35,7 @@ BREAK POINT SHALL be shown as a note name (39 = C3), with LEFT and RIGHT DEPTH (
 - **THEN** it reads C3
 
 ### Requirement: Voice settings, name, undo, init
-The voice panel SHALL hold the pitch envelope, the LFO (wave, speed, delay, pitch and amp mod depth, sync, pitch mod sensitivity), TRANSPOSE (as a note, 12 = C2) and the 10-character name. UNDO and REDO SHALL restore earlier bytes exactly. INIT SHALL load the owner's manual's INIT VOICE.
+The voice panel SHALL hold the pitch envelope, the LFO (wave, speed, delay, pitch and amp mod depth, sync, pitch mod sensitivity), TRANSPOSE (as a note, 12 = C2) and the 10-character name. UNDO and REDO SHALL restore earlier bytes exactly. INIT SHALL load INIT VOICE (OP1 alone at full level on algorithm 1; the values DX7 owners report for VOICE INIT, which the manual doesn't list).
 
 #### Scenario: Undo restores bytes
 - **WHEN** a voice arrives from the DX7, three fields are edited, and UNDO is pressed three times

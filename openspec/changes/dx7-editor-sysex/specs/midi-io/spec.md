@@ -14,11 +14,11 @@ MIDI access, including SysEx, SHALL be requested only from the CONNECT MIDI butt
 - **THEN** the browser is asked for MIDI access with SysEx
 
 ### Requirement: Receiving
-Every message on MIDI IN SHALL be parsed: a VCED replaces the voice being edited (undoable, announced by name); a VMEM opens an import panel of its 32 voices; a damaged message is announced and changes nothing; other Yamaha formats are announced as not supported; everything else is ignored. The editor SHALL never send a dump request.
+Every message on MIDI IN SHALL be parsed: a VCED replaces the voice being edited (undoable, announced by name); a VMEM opens the import dialog with its 32 voices; a damaged message is announced and changes nothing; other Yamaha formats are announced as not supported; everything else is ignored. The editor SHALL never send a dump request.
 
 #### Scenario: Bank arrives
 - **WHEN** the DX7 transmits its 32 internal voices
-- **THEN** the import panel lists 32 names and ADD ALL puts them in the library
+- **THEN** the import dialog lists 32 names, all checked, and ADD SELECTED puts them in the library
 
 ### Requirement: Sending
 SEND SHALL send the current voice as one VCED on the chosen channel. With SEND ON EDIT, each single-field edit SHALL send one parameter change at once, and a multi-field change (INIT, paste, opening a voice) SHALL send a VCED. BANK SEND SHALL ask for confirmation naming the memory-protect setting before sending a VMEM. Several dumps SHALL be spaced apart. Sending is disabled without a MIDI OUT port.

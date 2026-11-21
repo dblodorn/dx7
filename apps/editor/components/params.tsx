@@ -4,15 +4,12 @@
 // Controls are named by `${id}-label`, the label text alone.
 
 import type { ReactNode } from "react";
+import type { Field } from "@dblodorn/yamaha-dx7-engine";
 import type { HelpKey } from "../lib/help";
 import Info from "./Info";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-
-// One field of a voice, as FieldRow draws it. dx7-editor-sysex replaces this with the field type from the
-// engine package's params.ts.
-export interface Field { label: string; min: number; max: number; options?: readonly string[]; display?: (v: number) => string }
 
 export const NOTE = "m-0 max-w-[60ch] text-[11px]";
 export const ROW = "mt-2 flex flex-wrap items-center gap-2.5";
