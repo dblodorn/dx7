@@ -33,7 +33,8 @@ Run from the root; they fan out to the workspace (`pnpm -F <name> <script>` for 
   - `setOperators(mask)` on both synths is a DX7-only extra (parameter 155), outside the common surface.
   - Also `src/synth.ts`, `src/offline.ts`, `src/notes.ts`, `src/worklet/` (the processor `yamaha-dx7-engine`), `src/sources/patch-source.ts` and `scripts/`.
   - `test/voices.ts` is a test-only voice builder.
-  - Workspace `exports["."]` is `src/index.ts`; `publishConfig.exports` swaps in `dist/`. Version 0.0.0, unpublished.
+  - Workspace `exports["."]` is `src/index.ts`; `publishConfig.exports` swaps in `dist/`.
+  - Released: 0.1.0 (change `release-engine-package`). To release the next version: bump `package.json`, add a dated `CHANGELOG.md` section (any `calibration.ts` change is at least minor and says which sound changed), merge, then push the tag `yamaha-dx7-engine@<version>` on `main`. The workflow publishes; never publish by hand.
 - `apps/editor/lib/dx7/`: the write side, re-exporting the read side.
   - `codec.ts`: `set`/`setMany` (clamp, one byte each), `setName`, `operatorBytes`/`setOperator`, `initVoice` (values unverified: the manual doesn't list them), `packVoice`, `enableMask`.
   - `sysex.ts`: `toSysex`, `toBankSysex` (pads with INIT VOICE), `toParamChange` (group 0), `toSyx`.

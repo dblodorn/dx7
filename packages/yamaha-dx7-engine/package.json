@@ -1,6 +1,6 @@
 {
   "name": "@dblodorn/yamaha-dx7-engine",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "The Yamaha DX7 emulator as a sound source: load voices, play notes, in an AudioWorklet or offline.",
   "type": "module",
   "license": "MIT AND Apache-2.0",
