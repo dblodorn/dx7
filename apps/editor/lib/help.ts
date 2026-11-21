@@ -126,10 +126,11 @@ export const HELP = {
     body: [
       "LOCAL: voices kept in this browser. IMPORT .SYX reads single voices and 32-voice banks (the format most DX7 archives use), and lets you choose which to add. Each voice exports as its own .syx; EXPORT BANK writes up to 32 checked voices as one bank, filled out with INIT VOICE.",
       "BANK SEND puts that bank into the DX7's internal memory, replacing all 32 voices there.",
+      "SHARED: a public list anyone can open. SHARE CURRENT adds the voice you're editing. Voices marked YOURS were shared from this browser, and only it can rename, update or delete them, using a device key kept here (no account). Copy the key under DEVICE KEY to manage them from another browser.",
       "RESOURCES: the owner's manual, the SysEx format, articles on how the DX7 works, and other tools elsewhere on the web.",
     ],
     manual: "pp.19–22",
-    editor: "SHARED and BANKS come after the emulator.",
+    editor: "Banks stay in LOCAL: check up to 32 voices there to export or send them as one bank.",
   },
 } satisfies Record<string, Help>;
 

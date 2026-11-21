@@ -14,6 +14,7 @@ export const TYPES: Record<ChangeKind, ChangeType> = {
 };
 
 export const CHANGELOG: Change[] = [
+  { date: "2026-11-21", type: "FEATURE", text: "LIBRARY → SHARED: share voices in a public list, open anyone's, and rename, update or delete your own. No account needed." },
   { date: "2026-11-21", type: "FEATURE", text: "SOUND plays the voice in the browser: a DX7 emulator with all 32 algorithms, envelopes, LFO and scaling. Operator ON/OFF mutes it too." },
   { date: "2026-11-21", type: "FEATURE", text: "Voice editor: the algorithm with its diagram, six operators with envelopes, keyboard scaling and frequency, the pitch envelope and the LFO, with undo." },
   { date: "2026-11-21", type: "FEATURE", text: "MIDI: receive voices and 32-voice banks from the DX7, send voices and banks back, and SEND ON EDIT changes the DX7 as you edit." },
