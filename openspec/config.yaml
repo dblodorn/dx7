@@ -1,0 +1,12 @@
+schema: spec-driven
+
+context: |
+  Browser editor/librarian for the Yamaha DX7 (Mk I voices) over Web MIDI SysEx, and its emulator as a package.
+  pnpm workspace: apps/editor (the Next.js app), packages/yamaha-dx7-engine (@dblodorn/yamaha-dx7-engine, playback only,
+  published to GitHub Packages; engine packages follow openspec/specs/engine-packages, copied from the vz10m repo).
+  Stack: Next.js 15 App Router, React 19, TypeScript (strict, erasable syntax only), Tailwind v4, shadcn (radix-ui) restyled
+  to windchime's 1-bit theme, zod, node:test. Sibling repos: ~/Desktop/sound/vz10m (the pattern this repo copies) and
+  ~/Desktop/sound/windchime (UI conventions source, and the first host of the engine package).
+  Voices are their unpacked VCED bytes (155 per voice); packages/yamaha-dx7-engine/src/params.ts maps fields to bytes.
+  VMEM (32 voices x 128 packed bytes) is converted on import and export. SysEx format facts must cite a source;
+  unverified ones are flagged, never guessed. No code from GPL projects (Dexed); msfa (Apache-2.0) may be ported with a NOTICE.
