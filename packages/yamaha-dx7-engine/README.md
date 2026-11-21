@@ -2,7 +2,41 @@
 
 The Yamaha DX7 emulator as a sound source: load a voice, play notes, in an AudioWorklet inside your own `AudioContext` or offline in Node. It comes from the [DX7 editor](https://github.com/dblodorn/dx7) and has the same shape as [`@dblodorn/casio-vz-engine`](https://github.com/dblodorn/vz10m/tree/main/packages/casio-vz-engine), so a host can swap one for the other.
 
-**Not released yet.** The first release (0.1.0) is the next change in the DX7 repo.
+## Install
+
+The package is on GitHub Packages, which needs a token to install, even for public packages. Make a classic personal access token with the `read:packages` scope, then add an `.npmrc` beside your `package.json`:
+
+```
+@dblodorn:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
+```
+
+```sh
+GITHUB_TOKEN=ghp_… pnpm add @dblodorn/yamaha-dx7-engine
+```
+
+It ships as ES modules with TypeScript types. Nothing needs to be built or configured on your side.
+
+## Play
+
+```ts
+import { createSynth } from "@dblodorn/yamaha-dx7-engine";
+
+let ctx: AudioContext | undefined;
+let synth: Awaited<ReturnType<typeof createSynth>> | undefined;
+
+button.onclick = async () => {
+  ctx ??= new AudioContext();       // create or resume it in a click
+  await ctx.resume();
+  synth ??= await createSynth(ctx);
+  synth.output.connect(ctx.destination);
+  synth.loadVoice(voiceBytes);      // 155 bytes, or one DX7 single-voice SysEx message
+  synth.noteOn(60, 100);
+  setTimeout(() => synth!.noteOff(60), 500);
+};
+```
+
+A 32-voice bank file reads with `fromSyx(bytes).items`, each item's `data` ready for `loadVoice`.
 
 The package only plays and reads voices. It has no way to change one, build SysEx or send MIDI.
 

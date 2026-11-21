@@ -19,13 +19,6 @@ From the root, `pnpm dev`, `pnpm build`, `pnpm test`, `pnpm typecheck` and `pnpm
 - **WHEN** the repo is cloned and `pnpm install && pnpm typecheck && pnpm test && pnpm build` is run
 - **THEN** every step passes with no token or environment variable set
 
-### Requirement: Silent engine skeleton
-Until the emulator lands, the engine package SHALL offer the common surface of `engine-packages` (`createSynth`, `createOfflineSynth`, `loadVoice`, notes, `dispose`) with an engine that renders silence, accepts 155-byte voices, and rejects any other length on the main thread.
-
-#### Scenario: Wrong length
-- **WHEN** a host calls `loadVoice` with 128 bytes
-- **THEN** the call throws and nothing is posted to the worklet
-
 ### Requirement: Publishing workflow
 A tag `yamaha-dx7-engine@<version>` SHALL publish the package to GitHub Packages only when the tag matches `package.json` and typecheck, test, build and smoke all pass.
 
