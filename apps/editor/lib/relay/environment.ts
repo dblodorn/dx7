@@ -39,3 +39,9 @@ async function fetchOperation(params: RequestParameters, variables: Variables): 
 export function createRelayEnvironment() {
   return new Environment({ network: Network.create(fetchOperation), store: new Store(new RecordSource()) });
 }
+
+// one store for the page's lifetime, shared by SHARED and BANKS, so going back to a tab shows its list at once (and
+// refetches it) and a voice saved in one is known to the other
+let environment: Environment | null = null;
+export const relayEnvironment = (): Environment => (environment ??= createRelayEnvironment());
+

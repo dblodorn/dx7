@@ -7,8 +7,9 @@
 
 import { Component, Suspense, useEffect, useRef, useState, type ReactNode } from "react";
 import { ConnectionHandler, RelayEnvironmentProvider, graphql, useFragment, useLazyLoadQuery, useMutation, usePaginationFragment } from "react-relay";
-import type { Environment, RecordSourceSelectorProxy } from "relay-runtime";
-import { ApiError, createRelayEnvironment } from "../lib/relay/environment";
+import type { RecordSourceSelectorProxy } from "relay-runtime";
+import { relayEnvironment } from "../lib/relay/environment";
+import { problem, refusedName } from "../lib/relay/problem";
 import * as D from "../lib/device";
 import * as V from "../lib/dx7/codec";
 import { isNameAllowed } from "../lib/dx7/names";
@@ -27,9 +28,6 @@ import type { SharedDeleteMutation } from "./__generated__/SharedDeleteMutation.
 const PAGE = 20;
 const NAME_MAX = 10;
 
-// one store for the page's lifetime, so going back to the tab shows the list at once (and refetches it)
-let environment: Environment | null = null;
-const relayEnvironment = () => (environment ??= createRelayEnvironment());
 
 const ListQuery = graphql`
   query SharedQuery($count: Int, $cursor: String, $creatorKey: String, $search: String, $yoursKey: String!) {
@@ -107,16 +105,6 @@ const DeleteMutation = graphql`
   }
 `;
 
-// What the person can do about an API or network error, in the page's voice.
-function problem(err: Error, doing: string): string {
-  const code = err instanceof ApiError ? err.code : "";
-  if (code === "RATE_LIMITED") return "TOO MANY CHANGES. TRY AGAIN LATER.";
-  if (code === "BAD_USER_INPUT") return err.message.toUpperCase();
-  if (code === "FORBIDDEN") return "ONLY THE DEVICE THAT SAVED THIS VOICE CAN CHANGE IT.";
-  if (code === "NOT_FOUND") return "THAT VOICE IS GONE.";
-  return `COULD NOT ${doing}.`;
-}
-const refusedName = (name: string) => `"${name}" ISN'T ALLOWED IN THE SHARED LIST. RENAME THE VOICE FIRST.`;
 
 const date = (iso: string): string => iso.slice(0, 10);
 const voiceOf = (data: string): Uint8Array | null => {
