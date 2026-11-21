@@ -2,7 +2,7 @@
 
 A browser editor and librarian for the Yamaha DX7 (Mk I voices) over Web MIDI SysEx, and its emulator published as a package (`@dblodorn/yamaha-dx7-engine`) that other apps (windchime first) use as a sound source. Sibling of `~/Desktop/sound/vz10m`, which it copies: same workspace shape, same stack, same UI rules, same engine-package convention (`openspec/specs/engine-packages`, copied from vz10m). When this file doesn't say how something is done, do it the way vz10m's `AGENTS.md` says.
 
-**Status:** the workspace (`openspec/specs/dx7-workspace`) is archived, and `dx7-editor-sysex` is built: the VCED/VMEM codec, MIDI voice and bank transfer, the voice editor and the local library. Its hardware checks are issue #3. The engine still renders silence.
+**Status:** the workspace and `dx7-editor-sysex` (codec, MIDI, voice editor, local library) are archived; hardware checks are issue #3. Next is `dx7-emulator` (planned, in `openspec/changes/`): the engine, ported from msfa where it can be. The engine still renders silence.
 
 Later changes, in order: the emulator (`dx7-emulator`), sharing and banks (`shared-voices-and-banks`, with a `dx7-voices` change in dmbk-graphql-api), publishing the engine package, and windchime's `add-dx7-synth`.
 
