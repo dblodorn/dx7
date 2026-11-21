@@ -9,7 +9,7 @@
     "build": "pnpm engine && pnpm relay && next build",
     "start": "next start",
     "test": "node --test 'test/**/*.test.ts'",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "pnpm relay && tsc --noEmit",
     "relay": "node scripts/relay.ts",
     "schema:pull": "node scripts/fetch-api-schema.ts",
     "engine": "pnpm -F @dblodorn/yamaha-dx7-engine build:worklet"
