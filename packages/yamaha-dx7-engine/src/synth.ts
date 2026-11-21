@@ -4,7 +4,7 @@
 // import during server rendering.
 
 import { checkNote, noteOnEvent } from "./notes.ts";
-import { readVoice } from "./voice.ts";
+import { readVoice } from "./codec.ts";
 import code from "./worklet/code.generated.ts";
 import { PROCESSOR, type ToWorklet } from "./worklet/messages.ts";
 
@@ -18,7 +18,7 @@ export interface SynthOptions {
 export interface Synth {
   // Stereo (the mono engine on both channels). Connect it to the destination or any other node.
   readonly output: AudioNode;
-  // 155 voice bytes (VCED, unpacked). Throws on anything else and keeps the voice it had.
+  // 155 voice bytes (VCED, unpacked) or one single-voice SysEx message. Throws on anything else and keeps the voice it had.
   // Notes already sounding keep the voice they started with.
   loadVoice(voice: Uint8Array): void;
   // note 0-127, velocity 0-127 (0 is a note-off). Throws on values out of range.

@@ -18,6 +18,6 @@
 
 ## 4. CI and deploy
 
-- [ ] 4.1 `.github/workflows/publish-yamaha-dx7-engine.yml` from vz10m's (tag prefix `yamaha-dx7-engine@`, version check, typecheck, test, build, smoke). Verify: the workflow parses (`gh workflow list` after push); no tag pushed.
-- [ ] 4.2 Vercel project `dx7` (team `db13`), root `apps/editor`; DNS `dx7` CNAME on DigitalOcean; `homepage` in the repo. Verify: `https://dx7.dmbk.io` serves the shell.
+- [x] 4.1 `.github/workflows/publish-yamaha-dx7-engine.yml` from vz10m's (tag prefix `yamaha-dx7-engine@`, version check, typecheck, test, build, smoke). Verify: the workflow parses (`gh workflow list` after push); no tag pushed.
+- [x] 4.2 Vercel project `dx7` (team `db13`), root `apps/editor`; DNS `dx7` CNAME on DigitalOcean; `homepage` in the repo. Verify: `https://dx7.dmbk.io` serves the shell.
 - [x] 4.3 `AGENTS.md` / `CLAUDE.md`: commands, layout and constraints as built. Verify: they match the tree.

@@ -4,11 +4,11 @@
 
 import { Engine } from "./engine/engine.ts";
 import { checkNote, checkSampleRate, noteOnEvent } from "./notes.ts";
-import { readVoice } from "./voice.ts";
+import { readVoice } from "./codec.ts";
 
 export interface OfflineSynth {
   readonly sampleRate: number;
-  // 155 voice bytes (VCED, unpacked). Throws on anything else and keeps the voice it had.
+  // 155 voice bytes (VCED, unpacked) or one single-voice SysEx message. Throws on anything else and keeps the voice it had.
   loadVoice(voice: Uint8Array): void;
   // note 0-127, velocity 0-127 (0 is a note-off). Throws on values out of range.
   noteOn(note: number, velocity?: number): void;
