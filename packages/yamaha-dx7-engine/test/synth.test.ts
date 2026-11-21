@@ -34,6 +34,11 @@ test("createSynth: checks on the main thread, so nothing bad is posted", async (
     assert.ok(sent?.type === "patch" && sent.data[0] === 0, "the voice is copied before posting");
     s.noteOn(60, 0);
     assert.deepEqual(f.posted[1], { type: "noteOff", note: 60 }, "velocity 0 is a note-off");
+    assert.throws(() => s.setOperators(64), RangeError);
+    assert.throws(() => s.setOperators(1.5), RangeError);
+    const before = f.posted.length;
+    s.setOperators(0b011111);
+    assert.deepEqual(f.posted.slice(before), [{ type: "operators", mask: 0b011111 }]);
     s.dispose();
     assert.throws(() => s.noteOn(60), /disposed/);
   } finally { f.restore(); }
@@ -48,7 +53,7 @@ test("createSynth: the worklet is added once per context, from a URL when given"
   } finally { f.restore(); }
 });
 
-test("createOfflineSynth: takes 155-byte voices and renders silence", () => {
+test("createOfflineSynth: takes 155-byte voices and writes only the span it renders", () => {
   const s = createOfflineSynth(48000);
   assert.throws(() => s.loadVoice(new Uint8Array(163)), RangeError);
   assert.throws(() => createOfflineSynth(0), RangeError);

@@ -2,7 +2,7 @@
 
 A browser editor and librarian for the Yamaha DX7 (Mk I voices) over Web MIDI SysEx, and its emulator published as a package (`@dblodorn/yamaha-dx7-engine`) that other apps (windchime first) use as a sound source. Sibling of `~/Desktop/sound/vz10m`, which it copies: same workspace shape, same stack, same UI rules, same engine-package convention (`openspec/specs/engine-packages`, copied from vz10m). When this file doesn't say how something is done, do it the way vz10m's `AGENTS.md` says.
 
-**Status:** the workspace and `dx7-editor-sysex` (codec, MIDI, voice editor, local library) are archived; hardware checks are issue #3. Next is `dx7-emulator` (planned, in `openspec/changes/`): the engine, ported from msfa where it can be. The engine still renders silence.
+**Status:** the workspace and `dx7-editor-sysex` (codec, MIDI, voice editor, local library) are archived; hardware checks are issue #3. `dx7-emulator` is built: SOUND plays. Reference comparisons are deferred to issue #6.
 
 Later changes, in order: the emulator (`dx7-emulator`), sharing and banks (`shared-voices-and-banks`, with a `dx7-voices` change in dmbk-graphql-api), publishing the engine package, and windchime's `add-dx7-synth`.
 
@@ -24,7 +24,13 @@ Run from the root; they fan out to the workspace (`pnpm -F <name> <script>` for 
   - `src/sysex.ts`: `parse`, `splitMessages`, `checksum`, `unpackVoice` (VMEM's 128 packed bytes → 155).
   - `src/codec.ts`: `get`, `getName`, `readVoice` (155 bytes or a 163-byte VCED), `frequency` (ratio/Hz as the panel shows it), `fromSyx`.
   - `src/algorithms.ts`: the 32 algorithms (carriers, edges, feedback), transcribed from the panel chart. `test/algorithms.test.ts` checks all of them against msfa's routing table.
-  - `src/engine/engine.ts`: 16-voice note assignment (the oldest is stolen). It renders silence until the emulator.
+  - `src/engine/`: the emulator, mostly ported from msfa (Apache-2.0; `NOTICE` lists the files, each ported file says so in its header; never copy from Dexed).
+    - `calibration.ts` is the one file of tunable numbers, each labelled PORTED / MANUAL / ESTIMATE. Changing one changes the sound: release at least a minor version, with a changelog line.
+    - `tables.ts` (sine, 2^x, frequency, in msfa's Q24 fixed point), `env.ts`, `pitchenv.ts`, `lfo.ts` (one per engine, as on the DX7).
+    - `note.ts`: one voice, routed per sample from `algorithms.ts`, so feedback through a chain (algorithms 4 and 6) works. Amplitude modulation, transpose, OSC KEY SYNC off and operator on/off are written here.
+    - `engine.ts`: 16 preallocated voices; a released voice frees itself once silent; 64-sample blocks.
+    - `render()` must never allocate (the test runs with `--expose-gc`). Keep the fixed-point arithmetic: `| 0` for 32-bit wraparound, `>>>` for unsigned, doubles for msfa's 64-bit products.
+  - `setOperators(mask)` on both synths is a DX7-only extra (parameter 155), outside the common surface.
   - Also `src/synth.ts`, `src/offline.ts`, `src/notes.ts`, `src/worklet/` (the processor `yamaha-dx7-engine`), `src/sources/patch-source.ts` and `scripts/`.
   - `test/voices.ts` is a test-only voice builder.
   - Workspace `exports["."]` is `src/index.ts`; `publishConfig.exports` swaps in `dist/`. Version 0.0.0, unpublished.

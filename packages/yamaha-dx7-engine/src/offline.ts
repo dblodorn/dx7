@@ -3,7 +3,7 @@
 // same samples.
 
 import { Engine } from "./engine/engine.ts";
-import { checkNote, checkSampleRate, noteOnEvent } from "./notes.ts";
+import { checkNote, checkOperatorMask, checkSampleRate, noteOnEvent } from "./notes.ts";
 import { readVoice } from "./codec.ts";
 
 export interface OfflineSynth {
@@ -14,6 +14,10 @@ export interface OfflineSynth {
   noteOn(note: number, velocity?: number): void;
   noteOff(note: number): void;
   allNotesOff(): void;
+  // DX7 only: which operators sound (parameter 155's value). Throws outside 0–63.
+  setOperators(mask: number): void;
+  // Voices sounding, released ones included until they fall silent.
+  sounding(): number;
   // Writes `frames` samples (mono) into out[offset...], replacing what was there.
   render(out: Float32Array, frames?: number, offset?: number): void;
 }
@@ -29,6 +33,8 @@ export function createOfflineSynth(sampleRate: number): OfflineSynth {
     },
     noteOff(note) { engine.noteOff(checkNote(note)); },
     allNotesOff() { engine.allOff(); },
+    setOperators(mask) { engine.setOperators(checkOperatorMask(mask)); },
+    sounding() { return engine.sounding(); },
     render(out, frames = out.length, offset = 0) {
       if (offset < 0 || frames < 0 || offset + frames > out.length) throw new RangeError(`Can't render ${frames} frames at ${offset} into ${out.length}.`);
       out.fill(0, offset, offset + frames);

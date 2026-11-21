@@ -90,7 +90,7 @@ export default function Editor() {
   const setValues = useCallback((values: Record<string, number>) => edit(V.setMany(voice, values)), [edit, voice]);
   const val = (key: string): number => V.get(voice, key);
   // a voice from elsewhere (library, INIT, the DX7): all operators back on, as the DX7 does on a voice change
-  const openVoice = useCallback((bytes: Uint8Array) => { edit(bytes); setOpsOn(ALL_ON); }, [edit]);
+  const openVoice = useCallback((bytes: Uint8Array) => { edit(bytes); setOpsOn(ALL_ON); A.setOperators(V.enableMask(ALL_ON)); }, [edit]);
 
   // ---- persistence: read after mount so the server render matches ----
   useEffect(() => {
@@ -218,6 +218,7 @@ export default function Editor() {
   function toggleOp(op: Operator, on: boolean) {
     const next = { ...opsOn, [op]: on };
     setOpsOn(next);
+    A.setOperators(V.enableMask(next));
     if (autoSend && midi.output) M.sendSysex(toParamChange(OPERATOR_ENABLE_PARAM, V.enableMask(next), { channel }));
   }
 

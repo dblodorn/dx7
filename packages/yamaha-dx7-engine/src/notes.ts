@@ -14,6 +14,12 @@ export function checkSampleRate(sampleRate: number): number {
   return sampleRate;
 }
 
+// Parameter 155's value: six bits, bit 5 OP1 … bit 0 OP6, 1 = on.
+export function checkOperatorMask(mask: number): number {
+  if (!Number.isInteger(mask) || mask < 0 || mask > 0b111111) throw new RangeError(`Operator mask must be a whole number from 0 to 63, got ${mask}.`);
+  return mask;
+}
+
 // What one note-on means: velocity 0 is a note-off, as in MIDI.
 export const noteOnEvent = (note: number, velocity: number): { note: number; velocity: number; off: boolean } => {
   checkNote(note);

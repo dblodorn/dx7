@@ -12,12 +12,13 @@ msfa models the DX7 in fixed-point integer arithmetic: log-domain levels and log
 | Keyboard level scaling (linear and exponential curves), velocity table, rate scaling | msfa `dx7note.cc` (PORTED) | `engine/note.ts` |
 | Pitch envelope | msfa `pitchenv.cc` (PORTED) | `engine/pitchenv.ts` |
 | LFO: speed table, delay, waves, key sync, S/H; PMD × PMS | msfa `lfo.cc`, `dx7note.cc` (PORTED) | `engine/lfo.ts` |
-| Operator kernel: phase modulation, feedback (average of the last two outputs, shifted by 8 − feedback) | msfa `fm_op_kernel.cc`, `fm_core.cc` (PORTED) | `engine/core.ts` |
-| Algorithm routing | this package's `algorithms.ts` (checked against msfa's table in phase 1) | `engine/core.ts` |
+| Operator kernel: phase modulation, the gain ramp across a block, feedback (average of the last two outputs, shifted by 8 − feedback) | msfa `fm_op_kernel.cc`, `fm_core.cc` (PORTED) | `engine/note.ts` |
+| Algorithm routing, run per sample so feedback through a chain works (algorithms 4 and 6: msfa leaves these loops out, "todo: more than one op in a feedback loop") | this package's `algorithms.ts`; the loop is written here | `engine/note.ts` |
+| Operator envelope rates at other sample rates: msfa's envelope has no sample-rate term (it ran at 44.1 kHz), so the increment is scaled by 44100 / rate | ESTIMATE (derived) | `engine/env.ts` |
 | Amplitude modulation: AMD × AMS, into each operator's log level | ESTIMATE (msfa leaves it out; the manual gives only the ranges, AMD 0–99 and AMS 0–3, p.13–14): AMS as four increasing depth steps with 0 = none, the LFO lowering the operator's log level; tuned by ear until references arrive | `engine/note.ts` |
 | Transpose: the voice's notes shifted by `transpose − 24` semitones before everything else | manual p.17 | `engine/note.ts` |
-| OSC KEY SYNC off: operator phases carry over to the next note in that voice slot | manual p.14 (msfa always resets) | `engine/core.ts` |
-| Operator on/off: a muted operator outputs nothing, but its envelope keeps running | manual p.12 | `engine/core.ts` |
+| OSC KEY SYNC off: operator phases carry over to the next note in that voice slot | manual p.14 (msfa always resets) | `engine/note.ts` |
+| Operator on/off: a muted operator outputs nothing, but its envelope keeps running | manual p.12 | `engine/note.ts` |
 | Output gain: Q24 sum → float, with headroom for 16 voices × up to 6 carriers | ESTIMATE, measured | `engine/calibration.ts` |
 
 `engine/calibration.ts` is the one file of tunable numbers, as `convert.ts` is in the VZ package. Each number is labelled PORTED (with the msfa line), MANUAL (with the page) or ESTIMATE. A change there changes the sound, so it is released as at least a minor version.
@@ -29,7 +30,7 @@ msfa is Apache-2.0. The package stays MIT for its own code. Ported files carry m
 ## Engine shape
 
 - `Engine` (in `engine.ts`) keeps its phase-0 API (`setPatch`, `noteOn`, `noteOff`, `allOff`, `render`, `sounding`) and adds `setOperators(mask)`.
-- Voices are preallocated: 16 `Note` objects, each with 6 envelopes, phases and feedback state.
+- Voices are preallocated: 16 `Note` objects, each with 6 envelopes, phases and feedback state. There is no separate `Patch` conversion: a note reads the 155 bytes once at note-on (everything it needs depends on the key and velocity anyway).
 - `render(out, frames, offset)` fills an internal 64-sample Q24 block and converts it into `out`. A request that isn't a multiple of 64 is served from the leftover block, so the worklet's 128 frames are exactly two blocks. It never allocates: the "allocates nothing" test from vz10m (`--expose-gc`) runs on it.
 - **Patch changes:** `setPatch` converts the 155 bytes into a `Patch` once (pre-scaled per-operator values that don't depend on the note), as the VZ engine does. Notes already sounding keep theirs.
 - **Note-on:** a voice gets the patch and the note: transpose, then per-operator frequency, level scaling, velocity and rate scaling. Note-off releases every envelope.
@@ -66,3 +67,11 @@ The package's own checks. Reference comparisons are deferred.
 - **AM is estimated:** voices that lean on AMS/AMD (tremolo, "wow") will be approximate until compared with references.
 - **Loudness:** the DX7's output level depends on the carrier count (manual p.16 has Yamaha setting carrier levels to 1/2 or 1/6 depending on the algorithm). The engine sums carriers without normalising, as the hardware does. The output gain leaves headroom for six carriers at 99, so a one-carrier INIT VOICE is quiet. Windchime will make its own louder INIT, as it did for the VZ.
 - **Fixed-point in JS:** 32-bit wraparound has to be explicit (`| 0`, `Math.imul`). The table and pitch tests catch slips.
+
+## Measured (task 3.2)
+
+- **Node:** 16 held notes of algorithm 1 with every operator at 99 and feedback 7 cost 3.1 % of one core (M4 Pro). The same bundled worklet code on Chromium's main thread costs 2.7 %.
+- **The real worklet in headless Chromium:** the renderer process goes from 3.0 % (SOUND on, no notes) to 12.8 % with those 16 notes. So the engine is under the 10 % target on its own, and Web Audio's real-time thread adds the rest.
+- vz10m's "about 5 %" was measured the per-process way; by that measure the DX7 is about twice the VZ (6 operators per voice, per-sample routing).
+- **Output level:** INIT VOICE peaks at 0.125. That worst-case voice with 16 notes peaks near 2.0, unclipped as designed.
+

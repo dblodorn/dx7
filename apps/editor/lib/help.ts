@@ -38,7 +38,7 @@ export const HELP = {
       "The six operators side by side, with their output level and frequency. ON/OFF mutes an operator while you edit, as the DX7's operator keys do; it isn't stored with the voice, so to silence an operator for good set its OUTPUT LEVEL to 0.",
     ],
     manual: "pp.12, 16",
-    editor: "ON/OFF is sent to the DX7 (with SEND ON EDIT) and resets to all on when a voice is opened, as on the hardware.",
+    editor: "ON/OFF mutes the operator in SOUND and is sent to the DX7 (with SEND ON EDIT); it resets to all on when a voice is opened, as on the hardware.",
   },
   envelope: {
     title: "ENVELOPE",
@@ -102,9 +102,9 @@ export const HELP = {
   sound: {
     title: "SOUND (EMULATOR)",
     body: [
-      "Plays the voice in the browser with an emulation of the DX7's FM engine: 16 notes, 6 operators each. It needs no hardware.",
+      "Plays the voice in the browser with an emulation of the DX7's FM engine: 16 notes, 6 operators each, the 32 algorithms with feedback, every envelope, the LFO and the scaling settings. It needs no hardware. Play it with KEYS or the Z–M keys.",
     ],
-    editor: "Not built yet: SOUND starts audio and takes notes, but the engine is silent until the emulator lands.",
+    editor: "Most of the engine is a port of msfa, an open DX7-compatible engine, so envelopes, pitch and FM behave like the DX7's; tremolo depth (AMD and AMP MOD SENS) is our estimate. It hasn't been compared with recordings of a real DX7 yet. Levels add up as on the hardware, so a voice with one carrier, like INIT VOICE, is quieter than one with several.",
   },
   keys: {
     title: "KEYS",
