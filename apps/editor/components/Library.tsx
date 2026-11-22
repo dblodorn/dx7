@@ -17,13 +17,14 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTi
 
 // The LIBRARY sheet, from vz10m's. LOCAL: voices kept in this browser; IMPORT .SYX reads single voices and 32-voice
 // banks and hands them to the import dialog (components/ImportDialog.tsx, owned by the editor so a bank from MIDI
-// uses it too); checked voices (up to 32) make a bank to export or send. SHARED: the public list
-// (components/Shared.tsx, its own chunk with Relay). RESOURCES: outside links (lib/resources.ts). Loaded with
+// uses it too); checked voices (up to 32) make a bank to export or send, or to share from BANKS. SHARED: the public
+// list (components/Shared.tsx, its own chunk with Relay). BANKS: public 32-voice banks (components/Banks.tsx). RESOURCES: outside links (lib/resources.ts). Loaded with
 // next/dynamic the first time LIBRARY is pressed.
 
 const Shared = dynamic(() => import("./Shared"), { ssr: false, loading: () => <p className={NOTE}>LOADING…</p> });
+const Banks = dynamic(() => import("./Banks"), { ssr: false, loading: () => <p className={NOTE}>LOADING…</p> });
 
-const TABS = [{ value: "local", label: "LOCAL" }, { value: "shared", label: "SHARED" }, { value: "resources", label: "RESOURCES" }] as const;
+const TABS = [{ value: "local", label: "LOCAL" }, { value: "shared", label: "SHARED" }, { value: "banks", label: "BANKS" }, { value: "resources", label: "RESOURCES" }] as const;
 type Tab = (typeof TABS)[number]["value"];
 const BANK = 32;
 
@@ -106,6 +107,7 @@ export default function Library({ open, onOpenChange, library, updateLibrary, vo
         <SheetDescription id="lib-desc" className={NOTE}>
           {tab === "local" ? "Kept in this browser. Import and export .syx files to move voices and banks between machines."
             : tab === "shared" ? "DX7 voices anyone can open. What you share here is public, and names are checked before they're listed."
+            : tab === "banks" ? "Banks of 32 voices, like cartridges, that anyone can open: Yamaha's factory ROM cards and banks people share. Open one to play, send or download it."
             : "Manuals, the SysEx format, articles and tools elsewhere on the web. They open in a new tab."}
         </SheetDescription>
         {tab === "resources" && (
@@ -127,6 +129,15 @@ export default function Library({ open, onOpenChange, library, updateLibrary, vo
               const name = V.getName(bytes) || "UNTITLED";
               updateLibrary(list => [entry(name, bytes), ...list]);
               setMsg(`SAVED ${name} TO LOCAL.`);
+            }} />
+            {msg && <p role="status" className={NOTE}>{msg}</p>}
+          </div>
+        )}
+        {tab === "banks" && (
+          <div role="tabpanel" id="lib-panel-banks" aria-labelledby="lib-tab-banks" className="grid gap-3">
+            <Banks checked={bankBytes()} canSend={canSend} onOpen={onOpen} onSend={onSend} onCopyLocal={(voices, bank) => {
+              updateLibrary(list => [...voices.map(v => entry(V.getName(v) || "UNTITLED", v)), ...list]);
+              setMsg(`COPIED ${voices.length} VOICES FROM ${bank} TO LOCAL.`);
             }} />
             {msg && <p role="status" className={NOTE}>{msg}</p>}
           </div>

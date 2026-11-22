@@ -14,6 +14,8 @@ export const TYPES: Record<ChangeKind, ChangeType> = {
 };
 
 export const CHANGELOG: Change[] = [
+  { date: "2026-11-21", type: "FEATURE", text: "LIBRARY → BANKS: 32-voice banks like cartridges, with Yamaha's factory ROM1A–ROM4B. Open, send to the DX7, download, or share your own." },
+  { date: "2026-11-21", type: "ENHANCEMENT", text: "SHARED has the voices of Yamaha's factory ROM cards." },
   { date: "2026-11-21", type: "FEATURE", text: "LIBRARY → SHARED: share voices in a public list, open anyone's, and rename, update or delete your own. No account needed." },
   { date: "2026-11-21", type: "FEATURE", text: "SOUND plays the voice in the browser: a DX7 emulator with all 32 algorithms, envelopes, LFO and scaling. Operator ON/OFF mutes it too." },
   { date: "2026-11-21", type: "FEATURE", text: "Voice editor: the algorithm with its diagram, six operators with envelopes, keyboard scaling and frequency, the pitch envelope and the LFO, with undo." },

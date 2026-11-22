@@ -21,12 +21,19 @@ DX7 voices need a public list like vz10m's: for sharing between people and machi
   - a `dx7` API client key in Vercel (`DMBK_GRAPHQL_API_KEY`, production and preview, sensitive);
   - the schema pulled (`schemas/dmbk-graphql-api.graphql`) with the DX7 types.
 
+- **LIBRARY → BANKS** (decided after SHARED: banks shared on the API, like ROM cards):
+  - public 32-slot banks (`dmbkSoundDx7Banks`; dmbk-graphql-api PR #47), Yamaha's factory ROM1A–ROM4B among them;
+  - open a bank: its slots, OPEN a voice, SEND BANK (one VMEM, empty slots as INIT VOICE), .SYX, COPY TO LOCAL;
+  - SHARE CHECKED AS BANK: shares LOCAL's checked voices and saves them as a bank, yours to rename or delete.
+- **Factory voices:** Yamaha's ROM1A–ROM4B are in the API, as voices (in SHARED, searchable; also in windchime's PATCH picker) and as 8 banks.
+- `lib/relay/environment.ts` gives one Relay store to SHARED and BANKS; `lib/relay/problem.ts` holds their shared error wording.
+
 ## Non-goals
 
-- A BANKS tab (vz10m's SQLite banks): DX7 banks are LOCAL's checked voices.
-- Factory ROM voices in SHARED: decided separately.
+- Device-only banks (vz10m's SQLite BANKS): banks are shared, by choice.
+- Editing a bank's slots one by one: a bank is made from LOCAL's checked voices, then renamed or deleted.
 
 ## Capabilities
 
 ### Modified Capabilities
-- `library`: adds the SHARED tab.
+- `library`: adds the SHARED and BANKS tabs.

@@ -127,10 +127,11 @@ export const HELP = {
       "LOCAL: voices kept in this browser. IMPORT .SYX reads single voices and 32-voice banks (the format most DX7 archives use), and lets you choose which to add. Each voice exports as its own .syx; EXPORT BANK writes up to 32 checked voices as one bank, filled out with INIT VOICE.",
       "BANK SEND puts that bank into the DX7's internal memory, replacing all 32 voices there.",
       "SHARED: a public list anyone can open. SHARE CURRENT adds the voice you're editing. Voices marked YOURS were shared from this browser, and only it can rename, update or delete them, using a device key kept here (no account). Copy the key under DEVICE KEY to manage them from another browser.",
+      "BANKS: banks of 32 voices like cartridges, open to everyone: Yamaha's factory ROM1A to ROM4B cards, and banks people share. Open one to play a voice, send the whole bank to the DX7, download it or copy it to LOCAL. SHARE CHECKED AS BANK shares the voices checked in LOCAL as a new bank, yours to rename or delete.",
       "RESOURCES: the owner's manual, the SysEx format, articles on how the DX7 works, and other tools elsewhere on the web.",
     ],
     manual: "pp.19–22",
-    editor: "Banks stay in LOCAL: check up to 32 voices there to export or send them as one bank.",
+    editor: "The factory cards are Yamaha's ROM1A–ROM4B as archived on Dave Benson's DX7 page.",
   },
 } satisfies Record<string, Help>;
 
