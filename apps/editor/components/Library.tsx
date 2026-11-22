@@ -18,13 +18,13 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTi
 // The LIBRARY sheet, from vz10m's. LOCAL: voices kept in this browser; IMPORT .SYX reads single voices and 32-voice
 // banks and hands them to the import dialog (components/ImportDialog.tsx, owned by the editor so a bank from MIDI
 // uses it too); checked voices (up to 32) make a bank to export or send, or to share from BANKS. SHARED: the public
-// list (components/Shared.tsx, its own chunk with Relay). BANKS: public 32-voice banks (components/Banks.tsx). RESOURCES: outside links (lib/resources.ts). Loaded with
+// list (components/Shared.tsx, its own chunk with Relay). BANKS: public 32-voice banks (components/Banks.tsx). COLOPHON: the typeface's credit, then outside links (lib/resources.ts). Loaded with
 // next/dynamic the first time LIBRARY is pressed.
 
 const Shared = dynamic(() => import("./Shared"), { ssr: false, loading: () => <p className={NOTE}>LOADING…</p> });
 const Banks = dynamic(() => import("./Banks"), { ssr: false, loading: () => <p className={NOTE}>LOADING…</p> });
 
-const TABS = [{ value: "local", label: "LOCAL" }, { value: "shared", label: "SHARED" }, { value: "banks", label: "BANKS" }, { value: "resources", label: "RESOURCES" }] as const;
+const TABS = [{ value: "local", label: "LOCAL" }, { value: "shared", label: "SHARED" }, { value: "banks", label: "BANKS" }, { value: "colophon", label: "COLOPHON" }] as const;
 type Tab = (typeof TABS)[number]["value"];
 const BANK = 32;
 
@@ -52,7 +52,8 @@ export default function Library({ open, onOpenChange, library, updateLibrary, vo
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const t = store.get<string>("library.tab", "local");
+    const saved = store.get<string>("library.tab", "local");
+    const t = saved === "resources" ? "colophon" : saved; // the tab's old name
     setTab(TABS.some(x => x.value === t) ? (t as Tab) : "local");
   }, []);
   const chooseTab = (t: Tab) => { setTab(t); setMsg(""); store.set("library.tab", t); };
@@ -108,10 +109,17 @@ export default function Library({ open, onOpenChange, library, updateLibrary, vo
           {tab === "local" ? "Kept in this browser. Import and export .syx files to move voices and banks between machines."
             : tab === "shared" ? "DX7 voices anyone can open. What you share here is public, and names are checked before they're listed."
             : tab === "banks" ? "Banks of 32 voices, like cartridges, that anyone can open: Yamaha's factory ROM cards and banks people share. Open one to play, send or download it."
-            : "Manuals, the SysEx format, articles and tools elsewhere on the web. They open in a new tab."}
+            : "The typeface, then manuals, the SysEx format, articles and tools elsewhere on the web. They open in a new tab."}
         </SheetDescription>
-        {tab === "resources" && (
-          <ul role="tabpanel" id="lib-panel-resources" aria-labelledby="lib-tab-resources" className="m-0 grid list-none p-0">
+        {tab === "colophon" && (
+          <ul role="tabpanel" id="lib-panel-colophon" aria-labelledby="lib-tab-colophon" className="m-0 grid list-none p-0">
+            <li className="grid gap-1 border-t border-dashed border-foreground py-2">
+              <a href="https://aisforfonts.com/knif/" target="_blank" rel="noopener noreferrer"
+                className="w-fit tracking-[.06em] text-foreground underline underline-offset-3 outline-none focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-dashed">
+                TYPE: KNIF MONO BY A IS FOR FONTS
+              </a>
+              <p className={NOTE}>The editor is set in Knif Mono, licensed from the foundry A is for fonts.</p>
+            </li>
             {RESOURCES.map(r => (
               <li key={r.url} className="grid gap-1 border-t border-dashed border-foreground py-2">
                 <a href={r.url} target="_blank" rel="noopener noreferrer"
