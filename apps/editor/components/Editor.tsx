@@ -467,6 +467,8 @@ export default function Editor() {
       <footer className={`flex flex-wrap items-center gap-3 ${SMALL}`}>
         <span>VALUES ARE THE DX7&apos;S OWN 0–99 PANEL VALUES, AS STORED.</span>
         <span className="lead min-w-6" />
+        {/* the typeface's credit: Knif Mono, licensed from A is for fonts */}
+        <a href="https://aisforfonts.com/knif/" target="_blank" rel="noreferrer" className="text-foreground">TYPE: KNIF MONO BY A IS FOR FONTS</a>
         <Link href="/changelog" className="text-foreground">CHANGELOG</Link>
       </footer>
 
