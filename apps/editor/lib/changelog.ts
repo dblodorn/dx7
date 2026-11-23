@@ -14,6 +14,7 @@ export const TYPES: Record<ChangeKind, ChangeType> = {
 };
 
 export const CHANGELOG: Change[] = [
+  { date: "2026-11-23", type: "ENHANCEMENT", text: "LIBRARY → COLOPHON links the sound design system (soundsystem.dmbk.io)." },
   { date: "2026-11-22", type: "ENHANCEMENT", text: "LIBRARY → RESOURCES is now COLOPHON, and credits the typeface: Knif Mono by A is for fonts." },
   { date: "2026-11-21", type: "FEATURE", text: "LIBRARY → BANKS: 32-voice banks like cartridges, with Yamaha's factory ROM1A–ROM4B. Open, send to the DX7, download, or share your own." },
   { date: "2026-11-21", type: "ENHANCEMENT", text: "SHARED has the voices of Yamaha's factory ROM cards." },

@@ -109,7 +109,7 @@ export default function Library({ open, onOpenChange, library, updateLibrary, vo
           {tab === "local" ? "Kept in this browser. Import and export .syx files to move voices and banks between machines."
             : tab === "shared" ? "DX7 voices anyone can open. What you share here is public, and names are checked before they're listed."
             : tab === "banks" ? "Banks of 32 voices, like cartridges, that anyone can open: Yamaha's factory ROM cards and banks people share. Open one to play, send or download it."
-            : "The typeface, then manuals, the SysEx format, articles and tools elsewhere on the web. They open in a new tab."}
+            : "The typeface and the design system, then manuals, the SysEx format, articles and tools elsewhere on the web. They open in a new tab."}
         </SheetDescription>
         {tab === "colophon" && (
           <ul role="tabpanel" id="lib-panel-colophon" aria-labelledby="lib-tab-colophon" className="m-0 grid list-none p-0">
@@ -119,6 +119,13 @@ export default function Library({ open, onOpenChange, library, updateLibrary, vo
                 TYPE: KNIF MONO BY A IS FOR FONTS
               </a>
               <p className={NOTE}>The editor is set in Knif Mono, licensed from the foundry A is for fonts.</p>
+            </li>
+            <li className="grid gap-1 border-t border-dashed border-foreground py-2">
+              <a href="https://soundsystem.dmbk.io/" target="_blank" rel="noopener noreferrer"
+                className="w-fit tracking-[.06em] text-foreground underline underline-offset-3 outline-none focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-dashed">
+                SOUND DESIGN SYSTEM
+              </a>
+              <p className={NOTE}>The controls, type and colors this editor shares with Chime and the VZ-10M editor.</p>
             </li>
             {RESOURCES.map(r => (
               <li key={r.url} className="grid gap-1 border-t border-dashed border-foreground py-2">
