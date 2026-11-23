@@ -75,6 +75,6 @@ Run from the root; they fan out to the workspace (`pnpm -F <name> <script>` for 
 - Don't guess the format: every byte layout cites a source; conflicting facts are flagged `unverified`.
 - Nothing in the engine package writes voices or builds SysEx; writing lives in `apps/editor/lib/dx7/`.
 - SSR-safe modules; MIDI access only on a click, with `sysex: true`.
-- LIBRARY → COLOPHON credits the typeface first (TYPE: KNIF MONO BY A IS FOR FONTS, https://aisforfonts.com/knif/); Knif Mono is licensed under A is for fonts' webfont EULA, so keep the credit.
+- LIBRARY → COLOPHON credits the typeface first (TYPE: KNIF MONO BY A IS FOR FONTS, https://aisforfonts.com/knif/), then links SOUND DESIGN SYSTEM (https://soundsystem.dmbk.io/); Knif Mono is licensed under A is for fonts' webfont EULA, so keep the credit.
 - windchime's 1-bit UI language; changelog line for every shipped editor change; package releases get a `CHANGELOG.md` entry.
 - Features go through OpenSpec changes and are archived when done.
