@@ -102,9 +102,9 @@ export const HELP = {
   sound: {
     title: "SOUND (EMULATOR)",
     body: [
-      "Plays the voice in the browser with an emulation of the DX7's FM engine: 16 notes, 6 operators each, the 32 algorithms with feedback, every envelope, the LFO and the scaling settings. It needs no hardware. Play it with KEYS or the Z–M keys.",
+      "Plays the voice in the browser with an approximate emulation of the DX7's FM engine, a stand-in for hearing your edits, not a replacement for the instrument: 16 notes, 6 operators each, the 32 algorithms with feedback, every envelope, the LFO and the scaling settings. It needs no hardware. Play it with KEYS or the Z–M keys.",
     ],
-    editor: "Most of the engine is a port of msfa, an open DX7-compatible engine, so envelopes, pitch and FM behave like the DX7's; tremolo depth (AMD and AMP MOD SENS) is our estimate. It hasn't been compared with recordings of a real DX7 yet. Levels add up as on the hardware, so a voice with one carrier, like INIT VOICE, is quieter than one with several.",
+    editor: "Most of the engine is a port of msfa, an open DX7-compatible engine, so envelopes, pitch and FM follow the DX7's design; tremolo depth (AMD and AMP MOD SENS) is our estimate. It hasn't been compared with recordings of a real DX7 yet. Levels add up as on the hardware, so a voice with one carrier, like INIT VOICE, is quieter than one with several.",
   },
   keys: {
     title: "KEYS",
@@ -128,7 +128,7 @@ export const HELP = {
       "BANK SEND puts that bank into the DX7's internal memory, replacing all 32 voices there.",
       "SHARED: a public list anyone can open. SHARE CURRENT adds the voice you're editing. Voices marked YOURS were shared from this browser, and only it can rename, update or delete them, using a device key kept here (no account). Copy the key under DEVICE KEY to manage them from another browser.",
       "BANKS: banks of 32 voices like cartridges, open to everyone: Yamaha's factory ROM1A to ROM4B cards, and banks people share. Open one to play a voice, send the whole bank to the DX7, download it or copy it to LOCAL. SHARE CHECKED AS BANK shares the voices checked in LOCAL as a new bank, yours to rename or delete.",
-      "COLOPHON: the typeface (Knif Mono, by A is for fonts), then the owner's manual, the SysEx format, articles on how the DX7 works, and other tools elsewhere on the web.",
+      "COLOPHON: the typeface (Knif Mono, by A is for fonts), what this editor is for, the prior work it builds on (msfa, Ken Shirriff's chip articles, the SysEx format sheet), then the owner's manual and other tools elsewhere on the web.",
     ],
     manual: "pp.19–22",
     editor: "The factory cards are Yamaha's ROM1A–ROM4B as archived on Dave Benson's DX7 page.",

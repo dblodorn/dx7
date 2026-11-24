@@ -76,6 +76,8 @@ Run from the root; they fan out to the workspace (`pnpm -F <name> <script>` for 
 - Don't guess the format: every byte layout cites a source; conflicting facts are flagged `unverified`.
 - Nothing in the engine package writes voices or builds SysEx; writing lives in `apps/editor/lib/dx7/`.
 - SSR-safe modules; MIDI access only on a click, with `sysex: true`.
-- LIBRARY → COLOPHON credits the typeface first (TYPE: KNIF MONO BY A IS FOR FONTS, https://aisforfonts.com/knif/), then links SOUND DESIGN SYSTEM (https://soundsystem.dmbk.io/); Knif Mono is licensed under A is for fonts' webfont EULA, so keep the credit.
+- LIBRARY → COLOPHON credits the typeface first (TYPE: KNIF MONO BY A IS FOR FONTS, https://aisforfonts.com/knif/), then links SOUND DESIGN SYSTEM (https://soundsystem.dmbk.io/); Knif Mono is licensed under A is for fonts' webfont EULA, so keep the credit. Then `lib/resources.ts`: ABOUT, PRIOR WORK, RESOURCES.
+- **Prior work is always credited** in COLOPHON → PRIOR WORK (`PRIOR_WORK` in `lib/resources.ts`): every project, analysis, port, table or reference the code or the sound draws on, with a link and what was taken, even where no code was copied. A change that adds a source adds its entry.
+- **The emulator is an approximate stand-in.** The editor and librarian are the point, with learning the DX7; ABOUT, the SOUND (?) note and both READMEs say so. Never call the emulator accurate or authentic.
 - windchime's 1-bit UI language; changelog line for every shipped editor change; package releases get a `CHANGELOG.md` entry.
 - Features go through OpenSpec changes and are archived when done.

@@ -15,3 +15,5 @@ Use Chrome or Edge. On the DX7 press FUNCTION, then 8 to set MIDI CH (match CHAN
 - **To the DX7:** also set MEMORY PROTECT INTERNAL to OFF. SEND sends the voice you're editing; SEND ON EDIT sends each change as you make it; LIBRARY → BANK SEND replaces the DX7's 32 internal voices.
 
 SOUND plays the voice in the browser with the emulator (`packages/yamaha-dx7-engine`, mostly ported from msfa; see its README and NOTICE), no DX7 needed. Play it with KEYS or the Z–M keys.
+
+The emulator is an approximate stand-in for the DX7, not a replacement for it. This is an editor and librarian, and a way to learn how the DX7 is programmed; LIBRARY → COLOPHON credits the work it builds on.

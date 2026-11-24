@@ -2,6 +2,8 @@
 
 The Yamaha DX7 emulator as a sound source: load a voice, play notes, in an AudioWorklet inside your own `AudioContext` or offline in Node. It comes from the [DX7 editor](https://github.com/dblodorn/dx7) and has the same shape as [`@dblodorn/casio-vz-engine`](https://github.com/dblodorn/vz10m/tree/main/packages/casio-vz-engine), so a host can swap one for the other.
 
+It is an approximate stand-in for the DX7, made for hearing voices while editing and for learning, not a replacement for the instrument. Most of it is ported from [msfa](https://github.com/google/music-synthesizer-for-android) (Apache-2.0; see `NOTICE`).
+
 ## Install
 
 The package is on GitHub Packages, which needs a token to install, even for public packages. Make a classic personal access token with the `read:packages` scope, then add an `.npmrc` beside your `package.json`:
