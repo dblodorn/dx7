@@ -15,8 +15,6 @@ import * as V from "../lib/dx7/codec";
 import { isNameAllowed } from "../lib/dx7/names";
 import { fromB64, toB64 } from "../lib/store";
 import { NOTE, ROW, SMALL } from "./params";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import type { SharedQuery } from "./__generated__/SharedQuery.graphql";
 import type { SharedPaginationQuery } from "./__generated__/SharedPaginationQuery.graphql";
 import type { Shared_list$key } from "./__generated__/Shared_list.graphql";
@@ -24,6 +22,7 @@ import type { Shared_row$data, Shared_row$key } from "./__generated__/Shared_row
 import type { SharedSaveMutation, SharedSaveMutation$data } from "./__generated__/SharedSaveMutation.graphql";
 import type { SharedUpdateMutation } from "./__generated__/SharedUpdateMutation.graphql";
 import type { SharedDeleteMutation } from "./__generated__/SharedDeleteMutation.graphql";
+import { Badge, Button } from "@dblodorn/sound-ui";
 
 const PAGE = 20;
 const NAME_MAX = 10;

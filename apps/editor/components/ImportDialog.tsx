@@ -6,9 +6,7 @@
 import { useEffect, useState } from "react";
 import type { SyxItem } from "@dblodorn/yamaha-dx7-engine";
 import { NOTE, SMALL } from "./params";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button, Checkbox, Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@dblodorn/sound-ui";
 
 export interface Pending { title: string; items: SyxItem[]; note?: string }
 

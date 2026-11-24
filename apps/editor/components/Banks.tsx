@@ -19,8 +19,6 @@ import { isNameAllowed } from "../lib/dx7/names";
 import { download, fileName } from "../lib/files";
 import { fromB64, toB64 } from "../lib/store";
 import { NOTE, ROW, SMALL } from "./params";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import type { BanksQuery } from "./__generated__/BanksQuery.graphql";
 import type { BanksPaginationQuery } from "./__generated__/BanksPaginationQuery.graphql";
 import type { Banks_list$key } from "./__generated__/Banks_list.graphql";
@@ -29,6 +27,7 @@ import type { BanksSaveVoiceMutation } from "./__generated__/BanksSaveVoiceMutat
 import type { BanksSaveMutation, BanksSaveMutation$data } from "./__generated__/BanksSaveMutation.graphql";
 import type { BanksRenameMutation } from "./__generated__/BanksRenameMutation.graphql";
 import type { BanksDeleteMutation } from "./__generated__/BanksDeleteMutation.graphql";
+import { Badge, Button } from "@dblodorn/sound-ui";
 
 const PAGE = 20;
 const SLOTS = 32;

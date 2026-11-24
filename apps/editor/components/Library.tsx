@@ -10,10 +10,7 @@ import { entry, fromB64, store, type Entry } from "../lib/store";
 import type { Pending } from "./ImportDialog";
 import { NOTE, ROW, SMALL } from "./params";
 import Info from "./Info";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Button, Checkbox, Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, TypeCredit } from "@dblodorn/sound-ui";
 
 // The LIBRARY sheet, from vz10m's. LOCAL: voices kept in this browser; IMPORT .SYX reads single voices and 32-voice
 // banks and hands them to the import dialog (components/ImportDialog.tsx, owned by the editor so a bank from MIDI
@@ -114,10 +111,7 @@ export default function Library({ open, onOpenChange, library, updateLibrary, vo
         {tab === "colophon" && (
           <ul role="tabpanel" id="lib-panel-colophon" aria-labelledby="lib-tab-colophon" className="m-0 grid list-none p-0">
             <li className="grid gap-1 border-t border-dashed border-foreground py-2">
-              <a href="https://aisforfonts.com/knif/" target="_blank" rel="noopener noreferrer"
-                className="w-fit tracking-[.06em] text-foreground underline underline-offset-3 outline-none focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-dashed">
-                TYPE: KNIF MONO BY A IS FOR FONTS
-              </a>
+              <TypeCredit className="w-fit tracking-[.06em] text-foreground underline-offset-3 outline-none focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-dashed" />
               <p className={NOTE}>The editor is set in Knif Mono, licensed from the foundry A is for fonts.</p>
             </li>
             <li className="grid gap-1 border-t border-dashed border-foreground py-2">
