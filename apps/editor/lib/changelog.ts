@@ -14,6 +14,7 @@ export const TYPES: Record<ChangeKind, ChangeType> = {
 };
 
 export const CHANGELOG: Change[] = [
+  { date: "2026-11-24", type: "FIX", text: "KEYS: black keys are key-sized again instead of covering the page." },
   { date: "2026-11-24", type: "ENHANCEMENT", text: "LIBRARY → COLOPHON says what the editor is for (the emulator is an approximate stand-in for the DX7) and credits the work it builds on: msfa, Ken Shirriff's chip articles and the SysEx format sheet." },
   { date: "2026-11-23", type: "ENHANCEMENT", text: "The editor is built from the sound design system: the envelope marks its sustain point with a dotted line, the algorithm chart sits a little higher." },
   { date: "2026-11-23", type: "ENHANCEMENT", text: "LIBRARY → COLOPHON links the sound design system (soundsystem.dmbk.io)." },
