@@ -22,9 +22,7 @@ import ImportDialog, { type Pending } from "./ImportDialog";
 import Info from "./Info";
 import ScalingCurve from "./ScalingCurve";
 import { Check, FieldRow, NOTE, Param, ParamSelect, ROW, SMALL } from "./params";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { SelectItem } from "@/components/ui/select";
+import { Button, Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, SelectItem } from "@dblodorn/sound-ui";
 
 const Library = dynamic(() => import("./Library"), { ssr: false });
 const KeyboardFloater = dynamic(() => import("./KeyboardFloater"), { ssr: false });
